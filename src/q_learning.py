@@ -196,7 +196,18 @@ def process_obs(obs) -> List[int]:
         通过给定的观测值合理设计如何表示一个状态(不需要用到全部的观测值)
         然后删除或注释掉raise NotImplementedError
     """
-    raise NotImplementedError
+    x_a = 0.2 + 32 / 288
+    x_b = obs[1] + 52 / 288
+    if x_a < x_b:
+        x_to_1st_pipe = int((x_b - x_a) * obs_mul_factor)
+        y_to_1st_btm = int((obs[2] - obs[9]) * obs_mul_factor)
+    else:
+        x_to_1st_pipe = int(((obs[3] + 52 / 288) - x_a) * obs_mul_factor)
+        y_to_1st_btm = int((obs[5] - obs[9]) * obs_mul_factor)
+    player_v = int(obs[10] * obs_mul_factor)
+
+    state.extend([x_to_1st_pipe, y_to_1st_btm, player_v])
+    return state
 
 def train(iteration, alpha, gamma, epsilon):
     """
