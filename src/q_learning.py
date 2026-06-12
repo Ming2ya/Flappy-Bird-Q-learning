@@ -60,7 +60,10 @@ class GameAI():
             请在此处实现get_q_value()的功能
             然后删除或注释掉raise NotImplementedError
         """
-        raise NotImplementedError
+        if (state, action) in self.q:
+            return self.q[(state, action)]
+        else:
+            return 0
 
     def best_future_reward(self, state:List[int]) -> float:
         """
@@ -80,7 +83,12 @@ class GameAI():
             请在此处实现best_future_reward()的功能
             然后删除或注释掉raise NotImplementedError
         """
-        raise NotImplementedError
+        max_q = -float('inf')
+        for action in GameAI.available_actions(state):
+            q = self.get_q_value(state, action)
+            if q > max_q:
+                max_q = q
+        return max_q
 
 
     def update(self, old_state:List[int], action:int, new_state:List[int], reward):
@@ -100,7 +108,8 @@ class GameAI():
             请在此处实现update()的功能
             然后删除或注释掉raise NotImplementedError
         """
-        raise NotImplementedError
+        self.q[(old_state, action)] = (1 - self.alpha) * self.get_q_value(old_state, action) \
+                                      + self.alpha * self.best_future_reward(new_state)
 
 
     def choose_action(self, state:List[int], use_epsilon=True) -> int:
@@ -123,7 +132,18 @@ class GameAI():
             请在此处实现choose_action()的功能
             然后删除或注释掉raise NotImplementedError
         """
-        raise NotImplementedError
+        max_action = None
+        max_q = 0               #假设没有负q值
+        for action in GameAI.available_actions(state):
+            q = self.get_q_value(state, action)
+            if q > max_q:
+                max_q = q
+                max_action = action
+        eps = random.random()
+        if use_epsilon and eps <= self.epsilon:
+            return GameAI.available_actions(state)[random.randint(0, 1)]
+        else:
+            return max_action
 
     @classmethod
     def available_actions(cls, state:List[int]) -> Set[int]:
