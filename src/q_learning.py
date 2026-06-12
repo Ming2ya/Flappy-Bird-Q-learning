@@ -109,7 +109,7 @@ class GameAI():
             然后删除或注释掉raise NotImplementedError
         """
         self.q[(old_state, action)] = (1 - self.alpha) * self.get_q_value(old_state, action) \
-                                      + self.alpha * self.best_future_reward(new_state)
+                                      + self.alpha * (reward + self.gamma * self.best_future_reward(new_state))
 
 
     def choose_action(self, state:Tuple[int, ...], use_epsilon=True) -> int:
@@ -133,7 +133,7 @@ class GameAI():
             然后删除或注释掉raise NotImplementedError
         """
         max_action = None
-        max_q = 0               #假设没有负q值
+        max_q = -float('inf')
         for action in GameAI.available_actions(state):
             q = self.get_q_value(state, action)
             if q > max_q:
@@ -197,7 +197,7 @@ def process_obs(obs) -> Tuple[int, ...]:
         然后删除或注释掉raise NotImplementedError
     """
     x_a = 0.2 + 32 / 288
-    x_b = obs[1] + 52 / 288
+    x_b = obs[0] + 52 / 288
     if x_a < x_b:
         x_to_1st_pipe = int((x_b - x_a) * obs_mul_factor)
         y_to_1st_btm = int((obs[2] - obs[9]) * obs_mul_factor)
