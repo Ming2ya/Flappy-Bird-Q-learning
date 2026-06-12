@@ -209,7 +209,24 @@ def process_obs(obs) -> Tuple[int, ...]:
     state.extend([x_to_1st_pipe, y_to_1st_btm, player_v])
     return tuple(state)
 
-def train(iteration, alpha, gamma, epsilon):
+def evaluate(ai, episodes=10):
+    """
+    无界面运行指定局数，评估并返回平均得分。
+    """
+    env = gymnasium.make("FlappyBird-v0", render_mode=None, use_lidar=False)
+    scores = []
+    for _ in range(episodes):
+        obs, _ = env.reset()
+        while True:
+            action = ai.choose_action(process_obs(obs), use_epsilon=False)
+            obs, _, done, _, info = env.step(action)
+            if done:
+                scores.append(info['score'])
+                break
+    env.close()
+    return sum(scores) / len(scores) if scores else 0.0
+
+def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path=None):
     """
     通过让AI进行n次游戏来进行强化学习。
 
@@ -218,6 +235,8 @@ def train(iteration, alpha, gamma, epsilon):
     * alpha: 学习率
     * gamma: 折扣因子
     * epsilon: 行动时的探索概率
+    * test_interval: 每隔多少局游戏进行一次测试评估
+    * results_txt_path: 保存评估结果的 results.txt 路径
     """
     player = GameAI(alpha=alpha, gamma=gamma, epsilon=epsilon)
 
@@ -247,6 +266,15 @@ def train(iteration, alpha, gamma, epsilon):
                 break
 
             obs = next_obs
+        
+        current_episode = i + 1
+        if test_interval and current_episode % test_interval == 0:
+            avg_score = evaluate(player, episodes=10)
+            log_str = f"Episode {current_episode}: Average Score = {avg_score:.2f}\n"
+            print(log_str.strip())
+            if results_txt_path:
+                with open(results_txt_path, "a", encoding="utf-8") as f:
+                    f.write(log_str)
 
     env.close()
     print("Done training")
@@ -254,7 +282,7 @@ def train(iteration, alpha, gamma, epsilon):
     return player
 
 
-def play(ai, audio_on=False, render_mode="human", use_lidar=False):
+def play(ai, audio_on=False, render_mode="None", use_lidar=False):
     env = gymnasium.make("FlappyBird-v0", audio_on=audio_on, render_mode=render_mode, use_lidar=use_lidar)
     scores = []
     # 同样，使用seed可以确保每次游戏的随机性都是一致的

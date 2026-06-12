@@ -1,35 +1,87 @@
-from q_learning import train, play, GameAI
+from q_learning import train, play, GameAI, evaluate
 import datetime
 import argparse
 import time
+import os
+import sys
 
 parser = argparse.ArgumentParser(description="Flappy Bird")
 parser.add_argument("--train", action=argparse.BooleanOptionalAction, default=False,
-	help='Enable or disable the training process, use --no-train to disable it')
+                    help='Enable or disable the training process, use --no-train to disable it')
+parser.add_argument("--alpha", type=float, default=0.7, help="Learning rate alpha")
+parser.add_argument("--gamma", type=float, default=0.95, help="Discount factor gamma")
+parser.add_argument("--epsilon", type=float, default=0.0, help="Exploration probability epsilon")
+parser.add_argument("--iteration", type=int, default=50000, help="Number of training episodes")
+parser.add_argument("--exp-name", type=str, default="default_exp", help="Experiment directory name")
+parser.add_argument("--test-interval", type=int, default=5000, help="Evaluate every N episodes during training")
+
 args = parser.parse_args()
 
-# 参数设置
-alpha     = 0.7
-gamma     = 0.95
-epsilon   = 0
-iteration = 50000
+exp_dir = os.path.join("experiments", args.exp_name)
+path_q = os.path.join(exp_dir, "q.pkl")
+path_results = os.path.join(exp_dir, "results.txt")
+
 if args.train:
-	now_time = datetime.datetime.now().strftime('%m%d_%H%M%S')
-	# 根据当前时间给Q-Function命名
-	path = 'q_' + now_time + '.pkl'
-	start_time = time.time()
-	ai = train(iteration, alpha, gamma, epsilon)
-	interval = int(time.time() - start_time)  # Get elapsed time in seconds
-	minute = interval // 60
-	second = interval % 60
-	print("Training time:", f"{minute} min and {second} sec")
-	ai.save_q(path)
+    # 自动创建实验文件夹
+    os.makedirs(exp_dir, exist_ok=True)
+    
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # 格式化写入实验参数头信息
+    header = (
+        "========================================\n"
+        f"实验时间: {now_time}\n"
+        f"实验名称: {args.exp_name}\n"
+        "参数配置:\n"
+        f"  学习率 (alpha): {args.alpha}\n"
+        f"  折扣因子 (gamma): {args.gamma}\n"
+        f"  探索率 (epsilon): {args.epsilon}\n"
+        f"  总训练局数 (iteration): {args.iteration}\n"
+        f"  测试间隔轮数 (test-interval): {args.test_interval}\n"
+        "----------------------------------------\n"
+    )
+    with open(path_results, "a", encoding="utf-8") as f:
+        f.write(header)
+        
+    start_time = time.time()
+    ai = train(
+        iteration=args.iteration, 
+        alpha=args.alpha, 
+        gamma=args.gamma, 
+        epsilon=args.epsilon, 
+        test_interval=args.test_interval, 
+        results_txt_path=path_results
+    )
+    interval = int(time.time() - start_time)  # Get elapsed time in seconds
+    minute = interval // 60
+    second = interval % 60
+    duration_str = f"Training time: {minute} min and {second} sec"
+    print(duration_str)
+    
+    # 最终模型保存
+    ai.save_q(path_q)
+    print(f"Model saved to: {path_q}")
+    
+    # 最终测试得分评估
+    final_score = evaluate(ai, episodes=10)
+    print(f"Final evaluation score: {final_score:.2f}")
+    
+    footer = (
+        "----------------------------------------\n"
+        f"训练耗时: {minute} 分 {second} 秒\n"
+        f"最终评估平均得分 (10局): {final_score:.2f}\n"
+        "========================================\n\n"
+    )
+    with open(path_results, "a", encoding="utf-8") as f:
+        f.write(footer)
+
 else:
-	ai = GameAI()
-	"""
-	请将'q_timestamp.pkl'替换成你自己的Q-Function的保存路径
-	"""
-	path = 'q_timestamp.pkl'
-	ai.load_q(path)
-	play(ai)
+    if not os.path.exists(path_q):
+        print(f"Error: 无法找到实验模型文件 {path_q}。请先使用 --train 训练该实验，或确认实验名称是否正确。", file=sys.stderr)
+        sys.exit(1)
+        
+    ai = GameAI()
+    print(f"Loading Q-table from {path_q}...")
+    ai.load_q(path_q)
+    play(ai)
 
