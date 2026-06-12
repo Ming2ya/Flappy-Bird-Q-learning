@@ -42,7 +42,7 @@ class GameAI():
         with open(path, 'rb') as ff:
             self.q = pickle.load(ff)
 
-    def get_q_value(self, state:List[int], action:int) -> float:
+    def get_q_value(self, state:Tuple[int, ...], action:int) -> float:
         """
         返回(state, action)对的Q-Value，
         如果self.q中不存在对应的Q-Value，则返回0。
@@ -65,7 +65,7 @@ class GameAI():
         else:
             return 0
 
-    def best_future_reward(self, state:List[int]) -> float:
+    def best_future_reward(self, state:Tuple[int, ...]) -> float:
         """
         给定状态state，考虑该状态中所有可能的（状态，行动）对，返回所有Q-Value的最大值。
         如果（状态，行动）对不在self.q中，则使用0作为Q-Value。
@@ -91,7 +91,7 @@ class GameAI():
         return max_q
 
 
-    def update(self, old_state:List[int], action:int, new_state:List[int], reward):
+    def update(self, old_state:Tuple[int, ...], action:int, new_state:Tuple[int, ...], reward):
         """
         给定一个(old_state, action, new_state, reward)样本对，
         使用Q-Learning算法更新Q-Value。
@@ -112,7 +112,7 @@ class GameAI():
                                       + self.alpha * self.best_future_reward(new_state)
 
 
-    def choose_action(self, state:List[int], use_epsilon=True) -> int:
+    def choose_action(self, state:Tuple[int, ...], use_epsilon=True) -> int:
         """
         给定状态，返回要采取的行动。
         如果epsilon为False，则返回该状态下的最优行动（具有最高Q-Value的行动，如果self.q中不存在则Q-Value为0）。
@@ -146,7 +146,7 @@ class GameAI():
             return max_action
 
     @classmethod
-    def available_actions(cls, state:List[int]) -> Set[int]:
+    def available_actions(cls, state:Tuple[int, ...]) -> Set[int]:
         """
         对给定的状态state，返回该状态下的所有合法行动。
         @classmethod表示这是类方法，因此不需要创建Nim的实例就可以调用该方法。
@@ -165,7 +165,7 @@ class GameAI():
         actions.add(1) # 1 means flap
         return actions
 
-def process_obs(obs) -> List[int]:
+def process_obs(obs) -> Tuple[int, ...]:
     """
     通过obs_mul_factor，将游戏环境返回的各种观测值obs转换成合适的状态值。
 
@@ -207,7 +207,7 @@ def process_obs(obs) -> List[int]:
     player_v = int(obs[10] * obs_mul_factor)
 
     state.extend([x_to_1st_pipe, y_to_1st_btm, player_v])
-    return state
+    return tuple(state)
 
 def train(iteration, alpha, gamma, epsilon):
     """
