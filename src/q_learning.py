@@ -141,7 +141,7 @@ class GameAI():
                 max_action = action
         eps = random.random()
         if use_epsilon and eps <= self.epsilon:
-            return GameAI.available_actions(state)[random.randint(0, 1)]
+            return random.choice(tuple(GameAI.available_actions(state)))
         else:
             return max_action
 
@@ -215,8 +215,8 @@ def evaluate(ai, episodes=10):
     """
     env = gymnasium.make("FlappyBird-v0", render_mode=None, use_lidar=False)
     scores = []
-    for _ in range(episodes):
-        obs, _ = env.reset()
+    for i in range(episodes):
+        obs, _ = env.reset(seed=42 + i)
         while True:
             action = ai.choose_action(process_obs(obs), use_epsilon=False)
             obs, _, done, _, info = env.step(action)
@@ -226,7 +226,7 @@ def evaluate(ai, episodes=10):
     env.close()
     return sum(scores) / len(scores) if scores else 0.0
 
-def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path=None):
+def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path=None, eval_episodes=10):
     """
     通过让AI进行n次游戏来进行强化学习。
 
@@ -237,6 +237,7 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
     * epsilon: 行动时的探索概率
     * test_interval: 每隔多少局游戏进行一次测试评估
     * results_txt_path: 保存评估结果的 results.txt 路径
+    * eval_episodes: 每次测试评估的游戏局数
     """
     player = GameAI(alpha=alpha, gamma=gamma, epsilon=epsilon)
 
@@ -269,7 +270,7 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
         
         current_episode = i + 1
         if test_interval and current_episode % test_interval == 0:
-            avg_score = evaluate(player, episodes=10)
+            avg_score = evaluate(player, episodes=eval_episodes)
             log_str = f"Episode {current_episode}: Average Score = {avg_score:.2f}\n"
             print(log_str.strip())
             if results_txt_path:
@@ -310,5 +311,4 @@ def play(ai, audio_on=False, render_mode="None", use_lidar=False):
     env.close()
     print(f'The average score(s) of Q-Function: {sum(scores) / len(scores)}')
     assert obs.shape == env.observation_space.shape
-
 
