@@ -1,0 +1,25 @@
+========================================
+实验时间: 2026-06-13 13:55:22
+实验名称: change_obs/chang_y
+参数配置:
+  学习率 (alpha): 0.7
+  折扣因子 (gamma): 0.95
+  探索率 (epsilon): 0.0
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+----------------------------------------
+Episode 5000: Average Score = 0.20
+Episode 10000: Average Score = 8.70
+Episode 15000: Average Score = 21.60
+Episode 20000: Average Score = 10.90
+Episode 25000: Average Score = 15.90
+Episode 30000: Average Score = 11.40
+Episode 35000: Average Score = 14.10
+Episode 40000: Average Score = 12.80
+Episode 45000: Average Score = 14.40
+Episode 50000: Average Score = 20.50
+----------------------------------------
+训练耗时: 3 分 22 秒
+最终评估平均得分 (10局): 19.50
+========================================
+

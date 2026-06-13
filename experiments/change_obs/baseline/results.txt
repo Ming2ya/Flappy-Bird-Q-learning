@@ -1,0 +1,35 @@
+========================================
+实验时间: 2026-06-13 13:43:43
+实验名称: change_obs/baseline
+参数配置:
+  学习率 (alpha): 0.7
+  折扣因子 (gamma): 0.95
+  探索率 (epsilon): 0.0
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+----------------------------------------
+========================================
+实验时间: 2026-06-13 13:43:50
+实验名称: change_obs/baseline
+参数配置:
+  学习率 (alpha): 0.7
+  折扣因子 (gamma): 0.95
+  探索率 (epsilon): 0.0
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+----------------------------------------
+Episode 5000: Average Score = 0.10
+Episode 10000: Average Score = 11.50
+Episode 15000: Average Score = 25.20
+Episode 20000: Average Score = 20.90
+Episode 25000: Average Score = 39.80
+Episode 30000: Average Score = 12.00
+Episode 35000: Average Score = 31.50
+Episode 40000: Average Score = 17.10
+Episode 45000: Average Score = 31.90
+Episode 50000: Average Score = 20.30
+----------------------------------------
+训练耗时: 5 分 59 秒
+最终评估平均得分 (10局): 17.80
+========================================
+
