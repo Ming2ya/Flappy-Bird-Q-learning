@@ -1,0 +1,52 @@
+========================================
+实验时间: 2026-06-13 20:37:00
+实验名称: fine_tune_alpha_epsilon/alpha_0.15_epsilon_0.03
+参数配置:
+  学习率 (alpha): 0.15
+  折扣因子 (gamma): 0.95
+  探索率 (epsilon): 0.03
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 5000: Average Score = 1.21
+Episode 10000: Average Score = 3.12
+Episode 15000: Average Score = 0.21
+Episode 20000: Average Score = 8.31
+Episode 25000: Average Score = 16.95
+Episode 30000: Average Score = 33.24
+Episode 35000: Average Score = 47.61
+Episode 40000: Average Score = 40.01
+Episode 45000: Average Score = 60.92
+Episode 50000: Average Score = 64.61
+----------------------------------------
+训练耗时: 0 分 57 秒
+最终评估平均得分 (100局): 62.32
+========================================
+
+========================================
+实验时间: 2026-06-13 21:28:47
+实验名称: fine_tune_alpha_epsilon/alpha_0.15_epsilon_0.03
+参数配置:
+  学习率 (alpha): 0.15
+  折扣因子 (gamma): 0.95
+  探索率 (epsilon): 0.03
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 5000: Average Score = 0.54
+Episode 10000: Average Score = 0.70
+Episode 15000: Average Score = 3.87
+Episode 20000: Average Score = 6.78
+Episode 25000: Average Score = 15.24
+Episode 30000: Average Score = 15.04
+Episode 35000: Average Score = 27.85
+Episode 40000: Average Score = 41.09
+Episode 45000: Average Score = 49.80
+Episode 50000: Average Score = 63.94
+----------------------------------------
+训练耗时: 0 分 52 秒
+最终评估平均得分 (100局): 63.94
+========================================
+
