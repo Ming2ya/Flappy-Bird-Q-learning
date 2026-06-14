@@ -4,6 +4,7 @@ import gymnasium
 import numpy
 import flappy_bird_gymnasium
 import pickle
+import math
 
 class GameAI():
 
@@ -226,7 +227,9 @@ def evaluate(ai, episodes=10):
     env.close()
     return sum(scores) / len(scores) if scores else 0.0
 
-def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path=None, eval_episodes=10):
+def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path=None, eval_episodes=10,
+          decay_method="none", epsilon_min=0.01, linear_decay_rate=30000.0,
+          exp_decay_rate=10000.0, mult_decay_rate=0.9999):
     """
     通过让AI进行n次游戏来进行强化学习。
 
@@ -238,6 +241,11 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
     * test_interval: 每隔多少局游戏进行一次测试评估
     * results_txt_path: 保存评估结果的 results.txt 路径
     * eval_episodes: 每次测试评估的游戏局数
+    * decay_method: 探索率衰减方法
+    * epsilon_min: 最小探索率
+    * linear_decay_rate: 线性衰减局数
+    * exp_decay_rate: 指数衰减参数
+    * mult_decay_rate: 乘数衰减参数
     """
     player = GameAI(alpha=alpha, gamma=gamma, epsilon=epsilon)
 
@@ -246,8 +254,18 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
     obs, _ = env.reset(seed=42)
     # 进行多次游戏
     for i in range(iteration):
-        if (i+1) % 1000 == 0:
-            print(f"Playing training game {i+1}")
+        # Epsilon decay
+        if decay_method == "linear":
+            player.epsilon = epsilon_min + (epsilon - epsilon_min) * max(0.0, 1.0 - i / linear_decay_rate)
+        elif decay_method == "exponential":
+            player.epsilon = epsilon_min + (epsilon - epsilon_min) * math.exp(-i / exp_decay_rate)
+        elif decay_method == "multiplicative":
+            player.epsilon = max(epsilon_min, epsilon * (mult_decay_rate ** i))
+        else:
+            player.epsilon = epsilon
+
+        # if (i+1) % 1000 == 0:
+        #     print(f"Playing training game {i+1}")
         obs, _ = env.reset()
         while True:
             # Next action:
@@ -283,7 +301,7 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
     return player
 
 
-def play(ai, audio_on=False, render_mode="None", use_lidar=False):
+def play(ai, audio_on=False, render_mode="human", use_lidar=False):
     env = gymnasium.make("FlappyBird-v0", audio_on=audio_on, render_mode=render_mode, use_lidar=use_lidar)
     scores = []
     # 同样，使用seed可以确保每次游戏的随机性都是一致的

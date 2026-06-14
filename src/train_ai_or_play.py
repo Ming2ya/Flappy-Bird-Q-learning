@@ -1,3 +1,4 @@
+from gymnasium.spaces import multi_discrete
 from q_learning import train, play, GameAI, evaluate
 import datetime
 import argparse
@@ -17,6 +18,15 @@ parser.add_argument("--iteration", type=int, default=50000, help="Number of trai
 parser.add_argument("--exp-name", type=str, default="default_exp", help="Experiment directory name")
 parser.add_argument("--test-interval", type=int, default=5000, help="Evaluate every N episodes during training")
 parser.add_argument("--eval-episodes", type=int, default=100, help="Number of episodes per evaluation")
+parser.add_argument("--decay-method", type=str, choices=["none", "linear", "exponential", "multiplicative"],
+                    default="none", help="Exploration decay method")
+parser.add_argument("--epsilon-min", type=float, default=0.01, help="Minimum epsilon for decay")
+parser.add_argument("--linear-decay-rate", type=float, default=30000.0,
+                    help="Number of episodes to decay epsilon linearly to epsilon-min")
+parser.add_argument("--exp-decay-rate", type=float, default=10000.0,
+                    help="Time constant for exponential decay")
+parser.add_argument("--mult-decay-rate", type=float, default=0.9999,
+                    help="Multiplicative factor for decay per episode")
 
 args = parser.parse_args()
 
@@ -42,6 +52,11 @@ if args.train:
         f"  学习率 (alpha): {args.alpha}\n"
         f"  折扣因子 (gamma): {args.gamma}\n"
         f"  探索率 (epsilon): {args.epsilon}\n"
+        f"  探索率衰减方式 (decay-method): {args.decay_method}\n"
+        f"  最小探索率 (epsilon-min): {args.epsilon_min}\n"
+        f"  线性衰减局数 (linear-decay-rate): {args.linear_decay_rate}\n"
+        f"  指数衰减时间常数 (exp-decay-rate): {args.exp_decay_rate}\n"
+        f"  乘数衰减系数 (mult-decay-rate): {args.mult_decay_rate}\n"
         f"  总训练局数 (iteration): {args.iteration}\n"
         f"  测试间隔轮数 (test-interval): {args.test_interval}\n"
         f"  每次评估局数 (eval-episodes): {args.eval_episodes}\n"
@@ -58,7 +73,12 @@ if args.train:
         epsilon=args.epsilon, 
         test_interval=args.test_interval, 
         results_txt_path=path_results,
-        eval_episodes=args.eval_episodes
+        eval_episodes=args.eval_episodes,
+        decay_method=args.decay_method,
+        epsilon_min=args.epsilon_min,
+        linear_decay_rate=args.linear_decay_rate,
+        exp_decay_rate=args.exp_decay_rate,
+        mult_decay_rate=args.mult_decay_rate
     )
     interval = int(time.time() - start_time)  # Get elapsed time in seconds
     minute = interval // 60
@@ -91,4 +111,4 @@ else:
     ai = GameAI()
     print(f"Loading Q-table from {path_q}...")
     ai.load_q(path_q)
-    play(ai)
+    play(ai, render_mode=None, use_lidar=False)
