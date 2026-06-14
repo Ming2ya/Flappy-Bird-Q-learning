@@ -1,0 +1,31 @@
+========================================
+实验时间: 2026-06-14 15:01:42
+实验名称: epsilon_decay/mult_slow
+参数配置:
+  学习率 (alpha): 0.1
+  折扣因子 (gamma): 0.95
+  探索率 (epsilon): 0.1
+  探索率衰减方式 (decay-method): multiplicative
+  最小探索率 (epsilon-min): 0.01
+  线性衰减局数 (linear-decay-rate): 30000.0
+  指数衰减时间常数 (exp-decay-rate): 10000.0
+  乘数衰减系数 (mult-decay-rate): 0.99992
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 5000: Average Score = 0.25
+Episode 10000: Average Score = 0.55
+Episode 15000: Average Score = 1.44
+Episode 20000: Average Score = 3.90
+Episode 25000: Average Score = 13.69
+Episode 30000: Average Score = 8.81
+Episode 35000: Average Score = 47.84
+Episode 40000: Average Score = 41.41
+Episode 45000: Average Score = 32.63
+Episode 50000: Average Score = 63.88
+----------------------------------------
+训练耗时: 2 分 10 秒
+最终评估平均得分 (100局): 63.88
+========================================
+

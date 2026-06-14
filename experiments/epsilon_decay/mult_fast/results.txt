@@ -1,0 +1,31 @@
+========================================
+实验时间: 2026-06-14 14:59:15
+实验名称: epsilon_decay/mult_fast
+参数配置:
+  学习率 (alpha): 0.1
+  折扣因子 (gamma): 0.95
+  探索率 (epsilon): 0.1
+  探索率衰减方式 (decay-method): multiplicative
+  最小探索率 (epsilon-min): 0.01
+  线性衰减局数 (linear-decay-rate): 30000.0
+  指数衰减时间常数 (exp-decay-rate): 10000.0
+  乘数衰减系数 (mult-decay-rate): 0.9998
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 5000: Average Score = 0.49
+Episode 10000: Average Score = 0.86
+Episode 15000: Average Score = 11.45
+Episode 20000: Average Score = 14.59
+Episode 25000: Average Score = 11.16
+Episode 30000: Average Score = 26.08
+Episode 35000: Average Score = 32.22
+Episode 40000: Average Score = 36.42
+Episode 45000: Average Score = 38.33
+Episode 50000: Average Score = 52.47
+----------------------------------------
+训练耗时: 2 分 24 秒
+最终评估平均得分 (100局): 52.47
+========================================
+
