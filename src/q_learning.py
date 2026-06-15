@@ -229,7 +229,7 @@ def evaluate(ai, episodes=10):
 
 def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path=None, eval_episodes=10,
           decay_method="none", epsilon_min=0.01, linear_decay_rate=30000.0,
-          exp_decay_rate=10000.0, mult_decay_rate=0.9999):
+          exp_decay_rate=10000.0, mult_decay_rate=0.9999, seed=42):
     """
     通过让AI进行n次游戏来进行强化学习。
 
@@ -246,12 +246,13 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
     * linear_decay_rate: 线性衰减局数
     * exp_decay_rate: 指数衰减参数
     * mult_decay_rate: 乘数衰减参数
+    * seed: 训练环境的初始化随机种子
     """
     player = GameAI(alpha=alpha, gamma=gamma, epsilon=epsilon)
 
     env = gymnasium.make("FlappyBird-v0", render_mode=None, use_lidar=False)
     # 使用seed可以确保每次训练时游戏的随机性都是一致的
-    obs, _ = env.reset(seed=42)
+    obs, _ = env.reset(seed=seed)
     # 进行多次游戏
     for i in range(iteration):
         # Epsilon decay
@@ -275,7 +276,7 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
             # Processing:
             next_obs, reward, terminated, _, info = env.step(action)
             if reward == -1:
-                reward = -1000
+                reward = -100
 
             # update the agent
             player.update(process_obs(obs), action, process_obs(next_obs), reward)

@@ -27,6 +27,7 @@ parser.add_argument("--exp-decay-rate", type=float, default=10000.0,
                     help="Time constant for exponential decay")
 parser.add_argument("--mult-decay-rate", type=float, default=0.9999,
                     help="Multiplicative factor for decay per episode")
+parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility")
 
 args = parser.parse_args()
 
@@ -36,8 +37,8 @@ path_results = os.path.join(exp_dir, "results.txt")
 
 if args.train:
     # 设置随机种子
-    random.seed(42)
-    np.random.seed(42)
+    random.seed(args.seed)
+    np.random.seed(args.seed)
     # 自动创建实验文件夹
     os.makedirs(exp_dir, exist_ok=True)
     
@@ -57,6 +58,7 @@ if args.train:
         f"  线性衰减局数 (linear-decay-rate): {args.linear_decay_rate}\n"
         f"  指数衰减时间常数 (exp-decay-rate): {args.exp_decay_rate}\n"
         f"  乘数衰减系数 (mult-decay-rate): {args.mult_decay_rate}\n"
+        f"  随机种子 (seed): {args.seed}\n"
         f"  总训练局数 (iteration): {args.iteration}\n"
         f"  测试间隔轮数 (test-interval): {args.test_interval}\n"
         f"  每次评估局数 (eval-episodes): {args.eval_episodes}\n"
@@ -78,7 +80,8 @@ if args.train:
         epsilon_min=args.epsilon_min,
         linear_decay_rate=args.linear_decay_rate,
         exp_decay_rate=args.exp_decay_rate,
-        mult_decay_rate=args.mult_decay_rate
+        mult_decay_rate=args.mult_decay_rate,
+        seed=args.seed
     )
     interval = int(time.time() - start_time)  # Get elapsed time in seconds
     minute = interval // 60
