@@ -27,6 +27,15 @@ parser.add_argument("--exp-decay-rate", type=float, default=10000.0,
                     help="Time constant for exponential decay")
 parser.add_argument("--mult-decay-rate", type=float, default=0.9999,
                     help="Multiplicative factor for decay per episode")
+parser.add_argument("--alpha-decay-method", type=str, choices=["none", "linear", "exponential", "count"],
+                    default="none", help="Learning rate alpha decay method")
+parser.add_argument("--alpha-min", type=float, default=0.01, help="Minimum alpha for decay")
+parser.add_argument("--alpha-linear-decay-rate", type=float, default=30000.0,
+                    help="Number of episodes to decay alpha linearly to alpha-min")
+parser.add_argument("--alpha-exp-decay-rate", type=float, default=10000.0,
+                    help="Time constant for alpha exponential decay")
+parser.add_argument("--alpha-decay-power", type=float, default=1.0,
+                    help="Power factor p for alpha count decay (alpha = 1 / (N^p))")
 parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility")
 
 args = parser.parse_args()
@@ -44,26 +53,49 @@ if args.train:
     
     now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    # 格式化写入实验参数头信息
-    header = (
-        "========================================\n"
-        f"实验时间: {now_time}\n"
-        f"实验名称: {args.exp_name}\n"
-        "参数配置:\n"
-        f"  学习率 (alpha): {args.alpha}\n"
-        f"  折扣因子 (gamma): {args.gamma}\n"
-        f"  探索率 (epsilon): {args.epsilon}\n"
-        f"  探索率衰减方式 (decay-method): {args.decay_method}\n"
-        f"  最小探索率 (epsilon-min): {args.epsilon_min}\n"
-        f"  线性衰减局数 (linear-decay-rate): {args.linear_decay_rate}\n"
-        f"  指数衰减时间常数 (exp-decay-rate): {args.exp_decay_rate}\n"
-        f"  乘数衰减系数 (mult-decay-rate): {args.mult_decay_rate}\n"
-        f"  随机种子 (seed): {args.seed}\n"
-        f"  总训练局数 (iteration): {args.iteration}\n"
-        f"  测试间隔轮数 (test-interval): {args.test_interval}\n"
-        f"  每次评估局数 (eval-episodes): {args.eval_episodes}\n"
-        "----------------------------------------\n"
-    )
+    # 动态组装实验参数头信息
+    header_lines = [
+        "========================================",
+        f"实验时间: {now_time}",
+        f"实验名称: {args.exp_name}",
+        "参数配置:",
+        f"  学习率 (alpha): {args.alpha}",
+    ]
+    
+    # 动态记录学习率衰减参数
+    header_lines.append(f"  学习率衰减方式 (alpha-decay-method): {args.alpha_decay_method}")
+    if args.alpha_decay_method == "linear":
+        header_lines.append(f"  最小学习率 (alpha-min): {args.alpha_min}")
+        header_lines.append(f"  学习率线性衰减局数 (alpha-linear-decay-rate): {args.alpha_linear_decay_rate}")
+    elif args.alpha_decay_method == "exponential":
+        header_lines.append(f"  最小学习率 (alpha-min): {args.alpha_min}")
+        header_lines.append(f"  学习率指数衰减时间常数 (alpha-exp-decay-rate): {args.alpha_exp_decay_rate}")
+    elif args.alpha_decay_method == "count":
+        header_lines.append(f"  学习率计数衰减指数 (alpha-decay-power): {args.alpha_decay_power}")
+
+    header_lines.append(f"  折扣因子 (gamma): {args.gamma}")
+    header_lines.append(f"  探索率 (epsilon): {args.epsilon}")
+    
+    # 动态记录探索率衰减参数
+    header_lines.append(f"  探索率衰减方式 (decay-method): {args.decay_method}")
+    if args.decay_method != "none":
+        header_lines.append(f"  最小探索率 (epsilon-min): {args.epsilon_min}")
+        if args.decay_method == "linear":
+            header_lines.append(f"  线性衰减局数 (linear-decay-rate): {args.linear_decay_rate}")
+        elif args.decay_method == "exponential":
+            header_lines.append(f"  指数衰减时间常数 (exp-decay-rate): {args.exp_decay_rate}")
+        elif args.decay_method == "multiplicative":
+            header_lines.append(f"  乘数衰减系数 (mult-decay-rate): {args.mult_decay_rate}")
+
+    header_lines.extend([
+        f"  随机种子 (seed): {args.seed}",
+        f"  总训练局数 (iteration): {args.iteration}",
+        f"  测试间隔轮数 (test-interval): {args.test_interval}",
+        f"  每次评估局数 (eval-episodes): {args.eval_episodes}",
+        "----------------------------------------"
+    ])
+    header = "\n".join(header_lines) + "\n"
+    
     with open(path_results, "a", encoding="utf-8") as f:
         f.write(header)
         
@@ -81,7 +113,12 @@ if args.train:
         linear_decay_rate=args.linear_decay_rate,
         exp_decay_rate=args.exp_decay_rate,
         mult_decay_rate=args.mult_decay_rate,
-        seed=args.seed
+        seed=args.seed,
+        alpha_decay_method=args.alpha_decay_method,
+        alpha_min=args.alpha_min,
+        alpha_linear_decay_rate=args.alpha_linear_decay_rate,
+        alpha_exp_decay_rate=args.alpha_exp_decay_rate,
+        alpha_decay_power=args.alpha_decay_power
     )
     interval = int(time.time() - start_time)  # Get elapsed time in seconds
     minute = interval // 60

@@ -22,6 +22,7 @@ class GameAI():
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
+        self.state_action_counts = dict()
 
     def save_q(self, path:str):
         """
@@ -92,7 +93,8 @@ class GameAI():
         return max_q
 
 
-    def update(self, old_state:Tuple[int, ...], action:int, new_state:Tuple[int, ...], reward):
+    def update(self, old_state:Tuple[int, ...], action:int, new_state:Tuple[int, ...], reward, 
+               current_alpha=None, use_count_decay=False, alpha_decay_power=1.0):
         """
         给定一个(old_state, action, new_state, reward)样本对，
         使用Q-Learning算法更新Q-Value。
@@ -109,8 +111,15 @@ class GameAI():
             请在此处实现update()的功能
             然后删除或注释掉raise NotImplementedError
         """
-        self.q[(old_state, action)] = (1 - self.alpha) * self.get_q_value(old_state, action) \
-                                      + self.alpha * (reward + self.gamma * self.best_future_reward(new_state))
+        if use_count_decay:
+            self.state_action_counts[(old_state, action)] = self.state_action_counts.get((old_state, action), 0) + 1
+            n = self.state_action_counts[(old_state, action)]
+            current_alpha = 1.0 / (n ** alpha_decay_power)
+        elif current_alpha is None:
+            current_alpha = self.alpha
+
+        self.q[(old_state, action)] = (1 - current_alpha) * self.get_q_value(old_state, action) \
+                                      + current_alpha * (reward + self.gamma * self.best_future_reward(new_state))
 
 
     def choose_action(self, state:Tuple[int, ...], use_epsilon=True) -> int:
@@ -229,7 +238,9 @@ def evaluate(ai, episodes=10):
 
 def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path=None, eval_episodes=10,
           decay_method="none", epsilon_min=0.01, linear_decay_rate=30000.0,
-          exp_decay_rate=10000.0, mult_decay_rate=0.9999, seed=42):
+          exp_decay_rate=10000.0, mult_decay_rate=0.9999, seed=42,
+          alpha_decay_method="none", alpha_min=0.01, alpha_linear_decay_rate=30000.0,
+          alpha_exp_decay_rate=10000.0, alpha_decay_power=1.0):
     """
     通过让AI进行n次游戏来进行强化学习。
 
@@ -265,6 +276,14 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
         else:
             player.epsilon = epsilon
 
+        # Alpha decay
+        if alpha_decay_method == "linear":
+            player.alpha = alpha_min + (alpha - alpha_min) * max(0.0, 1.0 - i / alpha_linear_decay_rate)
+        elif alpha_decay_method == "exponential":
+            player.alpha = alpha_min + (alpha - alpha_min) * math.exp(-i / alpha_exp_decay_rate)
+        else:
+            player.alpha = alpha
+
         # if (i+1) % 1000 == 0:
         #     print(f"Playing training game {i+1}")
         obs, _ = env.reset()
@@ -279,7 +298,11 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
                 reward = -100
 
             # update the agent
-            player.update(process_obs(obs), action, process_obs(next_obs), reward)
+            if alpha_decay_method == "count":
+                player.update(process_obs(obs), action, process_obs(next_obs), reward,
+                              use_count_decay=True, alpha_decay_power=alpha_decay_power)
+            else:
+                player.update(process_obs(obs), action, process_obs(next_obs), reward)
 
             # Checking if the player is still alive
             if terminated:
