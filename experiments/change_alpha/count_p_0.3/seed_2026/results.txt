@@ -1,0 +1,32 @@
+========================================
+实验时间: 2026-06-16 22:06:57
+实验名称: change_alpha/count_p_0.3/seed_2026
+参数配置:
+  学习率 (alpha): 0.5
+  学习率衰减方式 (alpha-decay-method): count
+  学习率计数衰减指数 (alpha-decay-power): 0.3
+  折扣因子 (gamma): 0.97
+  探索率 (epsilon): 0.2
+  探索率衰减方式 (decay-method): exponential
+  最小探索率 (epsilon-min): 0.01
+  指数衰减时间常数 (exp-decay-rate): 10000.0
+  随机种子 (seed): 2026
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 5000: Average Score = 0.00
+Episode 10000: Average Score = 2.26
+Episode 15000: Average Score = 27.36
+Episode 20000: Average Score = 92.79
+Episode 25000: Average Score = 280.40
+Episode 30000: Average Score = 60.50
+Episode 35000: Average Score = 130.63
+Episode 40000: Average Score = 117.65
+Episode 45000: Average Score = 140.08
+Episode 50000: Average Score = 105.10
+----------------------------------------
+训练耗时: 2 分 57 秒
+最终评估平均得分 (100局): 105.10
+========================================
+

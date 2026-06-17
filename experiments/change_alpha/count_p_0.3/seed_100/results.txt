@@ -1,0 +1,32 @@
+========================================
+实验时间: 2026-06-16 22:03:53
+实验名称: change_alpha/count_p_0.3/seed_100
+参数配置:
+  学习率 (alpha): 0.5
+  学习率衰减方式 (alpha-decay-method): count
+  学习率计数衰减指数 (alpha-decay-power): 0.3
+  折扣因子 (gamma): 0.97
+  探索率 (epsilon): 0.2
+  探索率衰减方式 (decay-method): exponential
+  最小探索率 (epsilon-min): 0.01
+  指数衰减时间常数 (exp-decay-rate): 10000.0
+  随机种子 (seed): 100
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 5000: Average Score = 0.94
+Episode 10000: Average Score = 2.02
+Episode 15000: Average Score = 13.85
+Episode 20000: Average Score = 6.15
+Episode 25000: Average Score = 57.94
+Episode 30000: Average Score = 129.95
+Episode 35000: Average Score = 103.36
+Episode 40000: Average Score = 242.14
+Episode 45000: Average Score = 106.76
+Episode 50000: Average Score = 151.64
+----------------------------------------
+训练耗时: 2 分 57 秒
+最终评估平均得分 (100局): 151.64
+========================================
+

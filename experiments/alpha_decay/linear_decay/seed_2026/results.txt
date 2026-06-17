@@ -1,0 +1,33 @@
+========================================
+实验时间: 2026-06-15 11:36:25
+实验名称: change_alpha/linear_decay/seed_2026
+参数配置:
+  学习率 (alpha): 0.5
+  学习率衰减方式 (alpha-decay-method): linear
+  最小学习率 (alpha-min): 0.01
+  学习率线性衰减局数 (alpha-linear-decay-rate): 30000.0
+  折扣因子 (gamma): 0.97
+  探索率 (epsilon): 0.2
+  探索率衰减方式 (decay-method): exponential
+  最小探索率 (epsilon-min): 0.01
+  指数衰减时间常数 (exp-decay-rate): 10000.0
+  随机种子 (seed): 2026
+  总训练局数 (iteration): 50000
+  测试间隔轮数 (test-interval): 5000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 5000: Average Score = 1.39
+Episode 10000: Average Score = 1.96
+Episode 15000: Average Score = 17.78
+Episode 20000: Average Score = 14.42
+Episode 25000: Average Score = 162.02
+Episode 30000: Average Score = 139.66
+Episode 35000: Average Score = 116.49
+Episode 40000: Average Score = 132.46
+Episode 45000: Average Score = 114.36
+Episode 50000: Average Score = 131.05
+----------------------------------------
+训练耗时: 1 分 39 秒
+最终评估平均得分 (100局): 131.05
+========================================
+
