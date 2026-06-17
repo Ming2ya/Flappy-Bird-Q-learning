@@ -198,7 +198,7 @@ def process_obs(obs) -> Tuple[int, ...]:
     Return:
     * 根据状态设计，将当前的观测值转换成对应的状态state
     """
-    obs_mul_factor = 30
+    obs_mul_factor = 40
     state = []
     """
     TODO 5:
