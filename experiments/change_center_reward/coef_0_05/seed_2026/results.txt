@@ -1,0 +1,34 @@
+========================================
+实验时间: 2026-06-18 12:08:55
+实验名称: change_center_reward/coef_0_05/seed_2026
+参数配置:
+  学习率 (alpha): 0.5
+  学习率衰减方式 (alpha-decay-method): count
+  学习率计数衰减指数 (alpha-decay-power): 0.4
+  折扣因子 (gamma): 0.97
+  探索率 (epsilon): 0.2
+  探索率衰减方式 (decay-method): exponential
+  最小探索率 (epsilon-min): 0.01
+  指数衰减时间常数 (exp-decay-rate): 20000.0
+  中心奖励系数 (center-reward-coef): 0.05
+  中心奖励水平窗口 (center-reward-x-window): 0.6
+  随机种子 (seed): 2026
+  总训练局数 (iteration): 100000
+  测试间隔轮数 (test-interval): 10000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 10000: Average Score = 1.24
+Episode 20000: Average Score = 2.01
+Episode 30000: Average Score = 5.37
+Episode 40000: Average Score = 14.51
+Episode 50000: Average Score = 44.25
+Episode 60000: Average Score = 210.41
+Episode 70000: Average Score = 869.68
+Episode 80000: Average Score = 562.41
+Episode 90000: Average Score = 328.97
+Episode 100000: Average Score = 311.17
+----------------------------------------
+训练耗时: 7 分 45 秒
+最终评估平均得分 (100局): 311.17
+========================================
+

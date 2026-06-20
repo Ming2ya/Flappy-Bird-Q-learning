@@ -6,6 +6,11 @@ import flappy_bird_gymnasium
 import pickle
 import math
 
+SCREEN_WIDTH = 288
+SCREEN_HEIGHT = 512
+PIPE_WIDTH = 52
+PLAYER_HEIGHT = 24
+
 class GameAI():
 
     def __init__(self, alpha=0.5, gamma=1, epsilon=0.1):
@@ -219,6 +224,38 @@ def process_obs(obs) -> Tuple[int, ...]:
     state.extend([x_to_1st_pipe, y_to_1st_btm, player_v])
     return tuple(state)
 
+def get_target_pipe(obs):
+    x_a = 0.2 + 32 / SCREEN_WIDTH
+    x_b = obs[0] + PIPE_WIDTH / SCREEN_WIDTH
+    if x_a < x_b:
+        return obs[0], obs[1], obs[2]
+    return obs[3], obs[4], obs[5]
+
+def center_reward(obs, coef=0.0, x_window=0.6):
+    if coef == 0:
+        return 0.0
+
+    pipe_x, top_y, bottom_y = get_target_pipe(obs)
+    gap_center = (top_y + bottom_y) / 2
+    bird_center = obs[9] + (PLAYER_HEIGHT / 2) / SCREEN_HEIGHT
+
+    safe_half_gap = ((bottom_y - top_y) - PLAYER_HEIGHT / SCREEN_HEIGHT) / 2
+    if safe_half_gap <= 0:
+        return 0.0
+
+    dist_ratio = abs(gap_center - bird_center) / safe_half_gap
+    center_score = 1 - min(dist_ratio, 2)
+
+    player_right = 0.2 + 32 / SCREEN_WIDTH
+    pipe_right = pipe_x + PIPE_WIDTH / SCREEN_WIDTH
+    x_dist = max(pipe_right - player_right, 0)
+    if x_window > 0:
+        x_weight = max(0.0, 1 - min(x_dist / x_window, 1))
+    else:
+        x_weight = 1.0
+
+    return coef * x_weight * center_score
+
 def evaluate(ai, episodes=10):
     """
     无界面运行指定局数，评估并返回平均得分。
@@ -240,7 +277,8 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
           decay_method="none", epsilon_min=0.01, linear_decay_rate=30000.0,
           exp_decay_rate=10000.0, mult_decay_rate=0.9999, seed=42,
           alpha_decay_method="none", alpha_min=0.01, alpha_linear_decay_rate=30000.0,
-          alpha_exp_decay_rate=10000.0, alpha_decay_power=1.0):
+          alpha_exp_decay_rate=10000.0, alpha_decay_power=1.0,
+          center_reward_coef=0.0, center_reward_x_window=0.6):
     """
     通过让AI进行n次游戏来进行强化学习。
 
@@ -296,6 +334,8 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
             next_obs, reward, terminated, _, info = env.step(action)
             if reward == -1:
                 reward = -100
+            else:
+                reward += center_reward(next_obs, center_reward_coef, center_reward_x_window)
 
             # update the agent
             if alpha_decay_method == "count":
@@ -353,4 +393,3 @@ def play(ai, audio_on=False, render_mode="human", use_lidar=False):
     env.close()
     print(f'The average score(s) of Q-Function: {sum(scores) / len(scores)}')
     assert obs.shape == env.observation_space.shape
-

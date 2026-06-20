@@ -18,3 +18,4 @@ A:
 
 Q: 关于学习率、探索律的衰减
 A: 有很多不同的方法，如`线性衰减 Linear Decay`, `指数衰减 Exponential Decay`, `乘法衰减 Multiplicative Decay`, `反比例衰减 Inverse-Time Decay`, `分段衰减 Piecewise Schedule`, `基于表现的自适应衰减`.
+

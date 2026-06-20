@@ -37,6 +37,10 @@ parser.add_argument("--alpha-exp-decay-rate", type=float, default=10000.0,
 parser.add_argument("--alpha-decay-power", type=float, default=1.0,
                     help="Power factor p for alpha count decay (alpha = 1 / (N^p))")
 parser.add_argument("--seed", type=int, default=42, help="Random seed for reproducibility")
+parser.add_argument("--center-reward-coef", type=float, default=0.0,
+                    help="Reward shaping coefficient for staying near the pipe center")
+parser.add_argument("--center-reward-x-window", type=float, default=0.6,
+                    help="Horizontal distance window for center reward shaping")
 
 args = parser.parse_args()
 
@@ -88,6 +92,8 @@ if args.train:
             header_lines.append(f"  乘数衰减系数 (mult-decay-rate): {args.mult_decay_rate}")
 
     header_lines.extend([
+        f"  中心奖励系数 (center-reward-coef): {args.center_reward_coef}",
+        f"  中心奖励水平窗口 (center-reward-x-window): {args.center_reward_x_window}",
         f"  随机种子 (seed): {args.seed}",
         f"  总训练局数 (iteration): {args.iteration}",
         f"  测试间隔轮数 (test-interval): {args.test_interval}",
@@ -118,7 +124,9 @@ if args.train:
         alpha_min=args.alpha_min,
         alpha_linear_decay_rate=args.alpha_linear_decay_rate,
         alpha_exp_decay_rate=args.alpha_exp_decay_rate,
-        alpha_decay_power=args.alpha_decay_power
+        alpha_decay_power=args.alpha_decay_power,
+        center_reward_coef=args.center_reward_coef,
+        center_reward_x_window=args.center_reward_x_window
     )
     interval = int(time.time() - start_time)  # Get elapsed time in seconds
     minute = interval // 60
@@ -151,4 +159,4 @@ else:
     ai = GameAI()
     print(f"Loading Q-table from {path_q}...")
     ai.load_q(path_q)
-    play(ai, render_mode=None, use_lidar=False)
+    play(ai)
