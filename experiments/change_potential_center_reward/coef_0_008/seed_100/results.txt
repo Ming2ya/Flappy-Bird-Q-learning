@@ -1,0 +1,35 @@
+========================================
+实验时间: 2026-06-20 20:50:21
+实验名称: change_potential_center_reward/coef_0_008/seed_100
+参数配置:
+  学习率 (alpha): 0.5
+  学习率衰减方式 (alpha-decay-method): count
+  学习率计数衰减指数 (alpha-decay-power): 0.4
+  折扣因子 (gamma): 0.97
+  探索率 (epsilon): 0.2
+  探索率衰减方式 (decay-method): exponential
+  最小探索率 (epsilon-min): 0.01
+  指数衰减时间常数 (exp-decay-rate): 30000.0
+  中心奖励系数 (center-reward-coef): 0.008
+  中心奖励水平窗口 (center-reward-x-window): 0.6
+  中心奖励模式 (center-reward-mode): potential
+  随机种子 (seed): 100
+  总训练局数 (iteration): 100000
+  测试间隔轮数 (test-interval): 10000
+  每次评估局数 (eval-episodes): 100
+----------------------------------------
+Episode 10000: Average Score = 1.36
+Episode 20000: Average Score = 2.42
+Episode 30000: Average Score = 4.77
+Episode 40000: Average Score = 2.38
+Episode 50000: Average Score = 126.38
+Episode 60000: Average Score = 176.92
+Episode 70000: Average Score = 144.24
+Episode 80000: Average Score = 148.40
+Episode 90000: Average Score = 157.98
+Episode 100000: Average Score = 134.49
+----------------------------------------
+训练耗时: 3 分 4 秒
+最终评估平均得分 (100局): 134.49
+========================================
+

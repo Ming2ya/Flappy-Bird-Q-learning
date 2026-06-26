@@ -41,6 +41,8 @@ parser.add_argument("--center-reward-coef", type=float, default=0.0,
                     help="Reward shaping coefficient for staying near the pipe center")
 parser.add_argument("--center-reward-x-window", type=float, default=0.6,
                     help="Horizontal distance window for center reward shaping")
+parser.add_argument("--center-reward-mode", type=str, choices=["direct", "potential"], default="direct",
+                    help="Use direct center reward or potential-based center shaping")
 
 args = parser.parse_args()
 
@@ -94,6 +96,7 @@ if args.train:
     header_lines.extend([
         f"  中心奖励系数 (center-reward-coef): {args.center_reward_coef}",
         f"  中心奖励水平窗口 (center-reward-x-window): {args.center_reward_x_window}",
+        f"  中心奖励模式 (center-reward-mode): {args.center_reward_mode}",
         f"  随机种子 (seed): {args.seed}",
         f"  总训练局数 (iteration): {args.iteration}",
         f"  测试间隔轮数 (test-interval): {args.test_interval}",
@@ -126,7 +129,8 @@ if args.train:
         alpha_exp_decay_rate=args.alpha_exp_decay_rate,
         alpha_decay_power=args.alpha_decay_power,
         center_reward_coef=args.center_reward_coef,
-        center_reward_x_window=args.center_reward_x_window
+        center_reward_x_window=args.center_reward_x_window,
+        center_reward_mode=args.center_reward_mode
     )
     interval = int(time.time() - start_time)  # Get elapsed time in seconds
     minute = interval // 60

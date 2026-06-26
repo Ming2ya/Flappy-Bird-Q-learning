@@ -231,7 +231,7 @@ def get_target_pipe(obs):
         return obs[0], obs[1], obs[2]
     return obs[3], obs[4], obs[5]
 
-def center_reward(obs, coef=0.0, x_window=0.6):
+def center_potential(obs, coef=0.0, x_window=0.6):
     if coef == 0:
         return 0.0
 
@@ -256,6 +256,17 @@ def center_reward(obs, coef=0.0, x_window=0.6):
 
     return coef * x_weight * center_score
 
+def center_reward(obs, coef=0.0, x_window=0.6):
+    return center_potential(obs, coef, x_window)
+
+def potential_center_reward(obs, next_obs, gamma, coef=0.0, x_window=0.6, terminated=False):
+    if coef == 0:
+        return 0.0
+
+    old_phi = center_potential(obs, coef, x_window)
+    next_phi = 0.0 if terminated else center_potential(next_obs, coef, x_window)
+    return gamma * next_phi - old_phi
+
 def evaluate(ai, episodes=10):
     """
     无界面运行指定局数，评估并返回平均得分。
@@ -278,7 +289,7 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
           exp_decay_rate=10000.0, mult_decay_rate=0.9999, seed=42,
           alpha_decay_method="none", alpha_min=0.01, alpha_linear_decay_rate=30000.0,
           alpha_exp_decay_rate=10000.0, alpha_decay_power=1.0,
-          center_reward_coef=0.0, center_reward_x_window=0.6):
+          center_reward_coef=0.0, center_reward_x_window=0.6, center_reward_mode="direct"):
     """
     通过让AI进行n次游戏来进行强化学习。
 
@@ -334,8 +345,17 @@ def train(iteration, alpha, gamma, epsilon, test_interval=None, results_txt_path
             next_obs, reward, terminated, _, info = env.step(action)
             if reward == -1:
                 reward = -100
-            else:
+            if center_reward_mode == "direct" and not terminated:
                 reward += center_reward(next_obs, center_reward_coef, center_reward_x_window)
+            elif center_reward_mode == "potential":
+                reward += potential_center_reward(
+                    obs,
+                    next_obs,
+                    gamma,
+                    center_reward_coef,
+                    center_reward_x_window,
+                    terminated,
+                )
 
             # update the agent
             if alpha_decay_method == "count":
