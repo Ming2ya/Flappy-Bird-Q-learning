@@ -1,11 +1,10 @@
 # Fdb version 4
-["xdvipdfmx"] 1782907091.10456 "report.xdv" "report.pdf" "report" 1782907091.83357 0
-  "report.xdv" 1782907091.03576 181712 859f4a207bd3846ede424f7ea1072a83 "xelatex"
+["xdvipdfmx"] 1782908305.65561 "report.xdv" "report.pdf" "report" 1782908306.52882 0
+  "report.xdv" 1782908305.58287 181692 f30bc2ab68c712bb1a6a80fb1b351f73 "xelatex"
   (generated)
   "report.pdf"
   (rewritten before read)
-["xelatex"] 1782907089.88567 "/Users/mingya/Documents/Artifitial_Intelligence/Final project/Flappy Bird/report_LaTeX/report.tex" "report.xdv" "report" 1782907091.8323 0
-  "/Users/mingya/Documents/Artifitial_Intelligence/Final project/Flappy Bird/report_LaTeX/report.tex" 1782907088.42258 27283 3bdc8e042006a452ccf73c3a6ad4d5f5 ""
+["xelatex"] 1782908304.40726 "report.tex" "report.xdv" "report" 1782908306.5276 0
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -82,9 +81,9 @@
   "/usr/local/texlive/2026/texmf-var/web2c/xetex/xelatex.fmt" 1782291056 5948569 e534ae6dec234b32cf25d953ab632d1c ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "figures/cover.png" 1782286999.69196 47937 e4b98b4c1347b392e309db9d61db07cf ""
-  "report.aux" 1782907091.03401 5681 d3fdfba8f91cb428ae485bc7d3a65569 "xelatex"
-  "report.tex" 1782907088.42258 27283 3bdc8e042006a452ccf73c3a6ad4d5f5 ""
-  "report.toc" 1782907091.03552 2163 46de1ae714f91e0fc525f98cc122f4a6 "xelatex"
+  "report.aux" 1782908305.58137 5681 d3fdfba8f91cb428ae485bc7d3a65569 "xelatex"
+  "report.tex" 1782908228.6989 27285 8fb701d6350e4a9e8fc6200ab8583b65 ""
+  "report.toc" 1782908305.58262 2163 46de1ae714f91e0fc525f98cc122f4a6 "xelatex"
   "zjureport.cls" 1782293755.0325 5403 73a099028f9b5200314b8c02631b437e ""
   (generated)
   "report.aux"
