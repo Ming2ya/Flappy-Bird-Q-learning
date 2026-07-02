@@ -1,2 +1,5 @@
 .vscode
 __pycache__
+report_LaTeX
+docs
+*.pdf

@@ -1,6 +1,6 @@
 # Flappy Bird Q-learning Final Project
 
-本仓库是人工智能课程 Flappy Bird 强化学习大作业。项目使用表格式 Q-learning 训练智能体，围绕状态表示、学习率/探索率衰减、折扣因子和奖励函数进行了多组实验，并整理了实验报告与训练结果。
+本仓库是人工智能课程 Flappy Bird 强化学习大作业。项目使用表格式 Q-learning 训练智能体，围绕状态表示、学习率/探索率衰减、折扣因子和奖励函数进行了多组实验，并整理了训练结果。
 
 ## 目录结构
 
@@ -11,9 +11,7 @@
 │   ├── train_ai_or_play.py        # 命令行训练/加载模型入口
 │   └── human_play.py              # 人类玩家模式
 ├── scripts/                      # 批量实验脚本
-├── experiments/                  # 各组实验结果，含 q.pkl 与 results.txt
-├── report_LaTeX/                 # 实验报告 LaTeX 源码与 report.pdf
-└── Flappy Bird说明文档.pdf        # 作业说明文档
+└── experiments/                  # 各组实验结果，含 q.pkl 与 results.txt
 ```
 
 ## 环境与运行
@@ -94,19 +92,3 @@ python src/train_ai_or_play.py --exp-name example_run
 | `change_center_reward/` | 直接中心奖励实验，测试鼓励小鸟靠近管道中心的 reward 修改。 |
 | `change_potential_center_reward/` | 基于势函数的中心奖励塑形实验。 |
 | `default/` | 默认参数下的基础训练结果。 |
-
-## 报告与主要结果
-
-实验报告源码位于 `report_LaTeX/report.tex`，编译后的报告为：
-
-```text
-report_LaTeX/report.pdf
-```
-
-最高分模型对应实验：
-
-```text
-experiments/change_death_pentalty/100_death_penalty/seed_42/q.pkl
-```
-
-该模型最终评估平均分为 `2052.40`。
